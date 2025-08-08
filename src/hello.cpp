@@ -1,7 +1,12 @@
 #include <iostream>
+#include "window.hpp"
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "Hello world" << std::endl;
+    Window win = Window();
+
+    while (win.pollRunning()) {
+        win.renderClear();
+    }
     return 0;
 }
