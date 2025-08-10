@@ -14,4 +14,4 @@ add_subdirectory(src)
 
 
 # Link to the actual SDL3 library.
-target_link_libraries(hello PRIVATE SDL3::SDL3)
+target_link_libraries(chip8 PRIVATE SDL3::SDL3)
