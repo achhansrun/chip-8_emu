@@ -1,61 +1,214 @@
 #include "chip8.hpp"
+#include <iostream>
+#include <fstream>
 
+uint8_t fontset[] = {
+0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+0x20, 0x60, 0x20, 0x20, 0x70, // 1
+0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+};
 
 Chip8::Chip8() {
-    window_buffer = vector<uint32_t>(window_buff, window_buff+SCREEN_SIZE);
-    for (int y = 0; y < SCREEN_HEIGHT; ++y) {
-        for (int x = 0; x < SCREEN_WIDTH; ++x) {
-            window_buffer[y * SCREEN_WIDTH + x] = 0; // -1 = 0xFFFFFFF ARGB
+    // Set program counter to 0x200 for initialization
+    this->program_counter = 0x200;
+    // Initialize registers
+    this->v_registers = vector<uint8_t>(this->v_registers_buffer, this->v_registers_buffer+this->NUM_VREGS);
+    // Zero out registers
+    std::fill(this->v_registers.begin(), this->v_registers.end(), 0);
+    //Initialize ram
+    this->ram = vector<uint8_t>(ram_buffer, ram_buffer+this->RAM_SIZE);
+    // Zero out memory
+    std::fill(this->ram.begin(), this->ram.end(), 0);
+    this->window_buffer = vector<uint32_t>(window_buff, window_buff+this->SCREEN_SIZE);
+    this->clearScreen();
+
+    // Load memory with fontset
+    for (size_t i = 0; i < sizeof(fontset); i++)
+    {
+        ram[0x50+i] = fontset[i];
+    }
+    // Reset timers
+
+}
+
+bool Chip8::getDrawFlag() {
+    return this->drawFlag;
+}
+
+vector<uint32_t> Chip8::getWindowBuffer() {
+    return this->window_buffer;
+}
+
+size_t Chip8::getWindowHeight() {
+    return this->SCREEN_HEIGHT;
+}
+
+size_t Chip8::getWindowWidth() {
+    return this->SCREEN_WIDTH;
+}
+
+void Chip8::clearScreen() {
+    // clear window buffer
+    std::fill(this->window_buffer.begin(), this->window_buffer.end(), 0);
+}
+
+void Chip8::loadProgram(const std::string &program) {
+    std::streampos size;
+    try
+    {
+        std::ifstream program_file (program, std::ios::in | std::ios::binary | std::ios::ate);
+        size = program_file.tellg();
+        std::cout << program_file.is_open() << std::endl;
+        program_file.seekg(0, std::ios::beg);
+        char * buffer = new char[size];
+        program_file.read(buffer, size);
+        for (size_t i = 0; i < size; i++)
+        {
+            ram[i + 0x200] = buffer[i];
         }
+        delete buffer;
+        program_file.close();
+        std::cout << "Loaded program: " << program << " into chip 8 ram." << std::endl;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
     }
     
 }
 
-bool Chip8::getDrawFlag() {
-    return drawFlag;
+void Chip8::fetchInstruction() {
+    this->current_instruction = (this->ram[this->program_counter] & 0xFF) << 8 | (this->ram[this->program_counter+1] &0xff);
+    std::cout << "Fetched instruction: " << std::hex << this->current_instruction << std::endl;
+    this->program_counter += 2;
 }
 
-// Need to free memory after calling
-void * Chip8::upsizeWindowBuffer(size_t window_width, size_t window_height) {
-    uint32_t *new_buffer = new uint32_t(window_width * window_height);
-    size_t upscale_size_width = window_width / SCREEN_WIDTH;
-    size_t upscale_size_height = window_height / SCREEN_HEIGHT;
+void Chip8::returnFromSubroutine() {
+    // TODO:
+}
 
-    size_t adjustment_for_upscaled_section_x = 0; 
-    size_t adjustment_for_upscaled_section_y = 0;
-    for (size_t y = 0; y < SCREEN_HEIGHT; y++)
-    {
-        for (size_t x = 0; x < SCREEN_WIDTH; x++)
-        {
-            for (size_t i = 0; i < upscale_size_height; i++)
-            {
-                for (size_t j = 0; j < upscale_size_width; j++)
-                {
-                    new_buffer[(y*SCREEN_HEIGHT + i)+(x+j)] = window_buffer[y * SCREEN_WIDTH + x];
-                    
-                }
-                
-            }
+void Chip8::call(uint16_t addr) {
+    // TODO:
+}
+
+void Chip8::jump(uint16_t addr) {
+    // TODO:
+}
+
+void Chip8::draw(uint8_t x, uint8_t y, uint8_t height) {
+    this->v_registers[0xf] = 0;
+    // Go through the height of the sprite, grab the byte associated, and render each of those pixels
+    // coresponding to the bits of that byte
+    for (size_t i = 0; i < height; i++) {
+        uint8_t sprite_byte = this->ram[this->index_register+i];
+        // Go through each bit in the sprite's byte
+        if ((y+i) > SCREEN_HEIGHT) {
+            break;
         }
-        adjustment_for_upscaled_section_y += upscale_size_height-1;
+        
+        for (size_t j = 0; j < 8; j++) {
+            uint8_t bitI = (sprite_byte >> j) & 1;
+            if (x+j > SCREEN_WIDTH) {
+                continue;
+            }
+            // XOR the pixel at the bit t
+            if ((this->window_buffer[x + SCREEN_WIDTH * (y+i)] == -1) && (bitI == 1)) {
+                this->window_buffer[x + SCREEN_WIDTH * (y+i)] = 0;
+                this->v_registers[0xf] = 1;
+            } else if (bitI == 0){
+                continue;
+            } else {
+                this->window_buffer[(x+j) + SCREEN_WIDTH * (y+i)] = -1;
+            }
+            
+        }
+        
     }
-    return new_buffer;
+    this->drawFlag = true;
 }
 
-vector<uint32_t> Chip8::getWindowBuffer() {
-    return window_buffer;
+uint8_t get_first_nibble(uint16_t instruction) {
+    return (instruction & 0xf000) >> 12;
 }
 
-size_t Chip8::getWindowHeight() {
-    return SCREEN_HEIGHT;
+uint8_t get_second_nibble(uint16_t instruction) {
+    return (instruction & 0x0f00) >> 8;
 }
 
-size_t Chip8::getWindowWidth() {
-    return SCREEN_WIDTH;
+uint8_t get_third_nibble(uint16_t instruction) {
+    return (instruction & 0x00f0) >> 4;
 }
 
-void Chip8::loadProgram() {
+uint8_t get_fourth_nibble(uint16_t instruction) {
+    return (instruction & 0x000f) >> 0;
+}
 
+uint16_t get_NNN(uint16_t instruction) {
+    return (instruction & 0x0fff);
+}
+
+uint8_t get_NN(uint16_t instruction) {
+    return (instruction & 0x00ff);
+}
+
+void Chip8::decodeInstruction() {
+    uint8_t nibble_one = get_first_nibble(this->current_instruction);
+    uint8_t nibble_two = get_second_nibble(this->current_instruction);
+    uint8_t nibble_three = get_third_nibble(this->current_instruction);
+    uint8_t nibble_four = get_fourth_nibble(this->current_instruction);
+    uint16_t NNN = get_NNN(this->current_instruction);
+    uint8_t NN = get_NN(this->current_instruction);
+    switch (nibble_one) {
+        case 0x0:
+            if (this->current_instruction == 0x00E0)
+            {
+                this->clearScreen();
+                this->drawFlag = true;
+            } else if (this->current_instruction == 0x00EE) {
+                this->returnFromSubroutine();
+            }
+            this->call(NNN);
+            break;
+        case 0x1:
+            this->jump(NNN);
+            break;
+        case 0x6:
+            v_registers[nibble_two] = NN;
+            break;
+        case 0x7:
+            v_registers[nibble_two] += NN;
+        case 0xa:
+            this->index_register = NNN;
+            break;
+        case 0xd:
+            this->draw(v_registers[nibble_two] % 64, v_registers[nibble_three] % 32, nibble_four);
+            break;
+        default:
+            break;
+    }
+    
+}
+
+void Chip8::emulateCycle() {
+    this->fetchInstruction();
+    this->decodeInstruction();
+}
+
+void Chip8::setDrawFlag(bool flag) {
+    this->drawFlag = flag;
 }
 
 Chip8::~Chip8() {
