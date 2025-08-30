@@ -4,7 +4,7 @@
 
 Window::Window(size_t window_width, size_t window_height, size_t texture_width, size_t texture_height) : window_height(window_height), window_width(window_width) {
     SDL_Init(SDL_INIT_VIDEO);
-    Window::window = SDL_CreateWindow("Hello, Triangle!", window_width, window_height, SDL_WINDOW_RESIZABLE);
+    Window::window = SDL_CreateWindow("Chip-8 Emu", window_width, window_height, SDL_WINDOW_RESIZABLE);
     if (Window::window == nullptr) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
     }
