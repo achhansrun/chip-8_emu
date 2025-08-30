@@ -1,6 +1,7 @@
 #include "chip8.hpp"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 uint8_t fontset[] = {
 0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -97,15 +98,17 @@ void Chip8::fetchInstruction() {
 }
 
 void Chip8::returnFromSubroutine() {
-    // TODO:
+    this->program_counter = this->stack.top();
+    this->stack.pop();
 }
 
 void Chip8::call(uint16_t addr) {
-    // TODO:
+    this->stack.push(this->program_counter);
+    this->jump(addr);
 }
 
 void Chip8::jump(uint16_t addr) {
-    // TODO:
+    this->program_counter = addr;
 }
 
 void Chip8::draw(uint8_t x, uint8_t y, uint8_t height) {
@@ -120,18 +123,18 @@ void Chip8::draw(uint8_t x, uint8_t y, uint8_t height) {
         }
         
         for (size_t j = 0; j < 8; j++) {
-            uint8_t bitI = (sprite_byte >> j) & 1;
+            uint8_t bitI = (sprite_byte >> 7-j) & 1;
             if (x+j > SCREEN_WIDTH) {
                 continue;
             }
             // XOR the pixel at the bit t
-            if ((this->window_buffer[x + SCREEN_WIDTH * (y+i)] == -1) && (bitI == 1)) {
-                this->window_buffer[x + SCREEN_WIDTH * (y+i)] = 0;
+            if ((this->window_buffer[(x+j) + (SCREEN_WIDTH * (y+i))] == -1) && (bitI == 1)) {
+                this->window_buffer[(x+j) + (SCREEN_WIDTH * (y+i))] = 0;
                 this->v_registers[0xf] = 1;
             } else if (bitI == 0){
                 continue;
             } else {
-                this->window_buffer[(x+j) + SCREEN_WIDTH * (y+i)] = -1;
+                this->window_buffer[(x+j) + (SCREEN_WIDTH * (y+i))] = -1;
             }
             
         }
@@ -179,25 +182,95 @@ void Chip8::decodeInstruction() {
                 this->drawFlag = true;
             } else if (this->current_instruction == 0x00EE) {
                 this->returnFromSubroutine();
+            } else
+            {
+                this->call(NNN);
             }
-            this->call(NNN);
             break;
         case 0x1:
             this->jump(NNN);
+            break;
+        case 0x2:
+            this->call(NNN);
+            break;
+        case 0x3:
+            if (v_registers[nibble_two] == NN) {
+                this->program_counter += 2;
+            }
+            break;
+        case 0x4:
+            if (v_registers[nibble_two] != NN) {
+                this->program_counter += 2;
+            }
+            break;
+        case 0x5:
+            if (v_registers[nibble_two] == v_registers[nibble_three]) {
+                this->program_counter += 2;
+            }
             break;
         case 0x6:
             v_registers[nibble_two] = NN;
             break;
         case 0x7:
             v_registers[nibble_two] += NN;
+            break;
         case 0xa:
             this->index_register = NNN;
+            break;
+        case 0xc:
+            v_registers[nibble_two] = rand() & NN; 
             break;
         case 0xd:
             this->draw(v_registers[nibble_two] % 64, v_registers[nibble_three] % 32, nibble_four);
             break;
+        case 0xf:
+            switch (NN)
+            {
+            case 0x07:
+                // TODO:
+                // Vx = get_delay()
+                break;
+            case 0x0A:
+                // TODO:
+                // Vx = get_key()
+                break;
+            case 0x15:
+                // TODO:
+                // delay_timer(Vx) 
+                break;	
+            case 0x18:
+                // TODO:
+                // sound_timer(Vx)
+                break;
+            case 0x1E:
+                this->index_register += v_registers[nibble_two];
+                break;
+            case 0x29:
+                index_register = 0x50 + (v_registers[nibble_two]*5);
+                break;
+            case 0x33:
+                // TODO:
+                // set_BCD(Vx)
+                // *(I+0) = BCD(3);
+                // *(I+1) = BCD(2);
+                // *(I+2) = BCD(1);
+                break;
+            case 0x55:
+                // TODO:
+                // reg_dump(Vx, &I)
+                break;
+            case 0x65:
+                // TODO:
+                // reg_load(Vx, &I)
+                break;
+            default:
+                std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                break;
+            }
         default:
+            std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
             break;
+        
     }
     
 }

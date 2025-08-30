@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <vector>
 #include <string>
+#include <stack>    
 
 using std::size_t;
 using std::vector;
@@ -23,7 +24,7 @@ private:
     uint16_t index_register;
     uint8_t timer;
     uint8_t sound_timer;
-    uint16_t stack_buff[STACK_SIZE];
+    std::stack<uint16_t> stack;
     uint8_t v_registers_buffer[NUM_VREGS];
     vector<uint8_t> v_registers;
     uint8_t ram_buffer[RAM_SIZE];
