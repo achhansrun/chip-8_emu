@@ -3,9 +3,9 @@ Creating a chip-8 emulator in c++
 
 ## How to start contributing
 
-First clone the repo
-`git clone https://github.com/achhansrun/chip-8_emu.git`
-Next, fetch submodule
+First clone the repo:  
+`git clone https://github.com/achhansrun/chip-8_emu.git`  
+Next, fetch submodules:  
 `git submodule update --init --recursive`
 
 ### How to do debug build
