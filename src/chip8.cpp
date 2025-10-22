@@ -226,47 +226,65 @@ void Chip8::decodeInstruction() {
         case 0xf:
             switch (NN)
             {
-            case 0x07:
-                // TODO:
-                // Vx = get_delay()
-                break;
-            case 0x0A:
-                // TODO:
-                // Vx = get_key()
-                break;
-            case 0x15:
-                // TODO:
-                // delay_timer(Vx) 
-                break;	
-            case 0x18:
-                // TODO:
-                // sound_timer(Vx)
-                break;
-            case 0x1E:
-                this->index_register += v_registers[nibble_two];
-                break;
-            case 0x29:
-                index_register = 0x50 + (v_registers[nibble_two]*5);
-                break;
-            case 0x33:
-                // TODO:
-                // set_BCD(Vx)
-                // *(I+0) = BCD(3);
-                // *(I+1) = BCD(2);
-                // *(I+2) = BCD(1);
-                break;
-            case 0x55:
-                // TODO:
-                // reg_dump(Vx, &I)
-                break;
-            case 0x65:
-                // TODO:
-                // reg_load(Vx, &I)
-                break;
-            default:
-                std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
-                break;
+                case 0x07:
+                    // TODO:
+                    // Vx = get_delay()
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                case 0x0A:
+                    // TODO:
+                    // Vx = get_key()
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                case 0x15:
+                    // TODO:
+                    // delay_timer(Vx)
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;	
+                case 0x18:
+                    // TODO:
+                    // sound_timer(Vx)
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                case 0x1E:
+                    this->index_register += v_registers[nibble_two];
+                    break;
+                case 0x29:
+                    index_register = 0x50 + (v_registers[nibble_two]*5);
+                    break;
+                case 0x33:
+                    // TODO:
+                    // set_BCD(Vx)
+                    // *(I+0) = BCD(3);
+                    // *(I+1) = BCD(2);
+                    // *(I+2) = BCD(1);
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                case 0x55:
+                    // TODO:
+                    // reg_dump(Vx, &I)
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                case 0x65:
+                    // TODO:
+                    // reg_load(Vx, &I)
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
+                default:
+                    std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
+                    break;
             }
+            break;
+            case 0xe:
+                switch (NN)
+                {
+                    case constant expression:
+                        /* code */
+                        break;
+                    
+                    default:
+                        break;
+                }
         default:
             std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex << this->current_instruction << std::endl;
             break;
