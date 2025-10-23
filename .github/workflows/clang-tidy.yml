@@ -2,8 +2,6 @@
 name: Clang-tidy
 
 on:
-  commit:
-    branches: [ master, develop ]
   push:
     branches: [ master, develop ]
   pull_request:
