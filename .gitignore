@@ -2,6 +2,7 @@
 build/
 Debug/
 .vscode/
+.venv/
 
 # Prerequisites
 *.d

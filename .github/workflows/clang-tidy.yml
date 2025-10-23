@@ -22,8 +22,11 @@ jobs:
       uses: HorstBaerbel/action-clang-tidy@1.2
       # These are optional (defaults displayed)
       with:
-        scandir: 'src'
+        scandir: '.'
         builddir: 'build'
         excludedirs: ''
         extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
         cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON'
+    - uses: RafikFarhad/clang-format-github-action@v3
+      with:
+        sources: "src/**"
