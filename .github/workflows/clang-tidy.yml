@@ -24,9 +24,9 @@ jobs:
       with:
         scandir: '.'
         builddir: 'build'
-        excludedirs: ''
+        excludedirs: 'vendored'
         extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
         cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON'
     - uses: RafikFarhad/clang-format-github-action@v3
       with:
-        sources: "src/**"
+        sources: "src/*.cpp src/*.hpp"
