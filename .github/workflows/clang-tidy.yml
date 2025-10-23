@@ -13,6 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    # Update references
+    - name: Git Submodule Update
+      run: |
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
     - name: Run clang-tidy
       uses: HorstBaerbel/action-clang-tidy@1.2
       # These are optional (defaults displayed)
