@@ -112,7 +112,7 @@ void Chip8::draw(uint8_t x, uint8_t y, uint8_t height) {
     }
 
     for (size_t j = 0; j < 8; j++) {
-      uint8_t bitI = (sprite_byte >> (7 - j)) & 1;
+      uint8_t bitI = (sprite_byte >> 7 - j) & 1;
       if (x + j > SCREEN_WIDTH) {
         continue;
       }
