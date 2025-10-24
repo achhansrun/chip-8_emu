@@ -8,7 +8,7 @@ permissions: {}
 
 jobs:
   build:
-    name: Lint
+    name: Super-Linter
     runs-on: ubuntu-latest
 
     permissions:
