@@ -11,7 +11,7 @@ Next, fetch submodules:
 
 ### How to do debug build
 
-First this command to initialize build:
-`cmake -S . -B build/Debug`
-Next this command to finally build:
-`cmake --build build/Debug
+First this command to initialize build:  
+`cmake -S . -B build/Debug`  
+Next this command to finally build:  
+`cmake --build build/Debug`  
