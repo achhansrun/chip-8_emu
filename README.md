@@ -1,3 +1,4 @@
+[![Super-Lint](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml/badge.svg)](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml)
 # chip-8_emu
 Creating a chip-8 emulator in c++
 
