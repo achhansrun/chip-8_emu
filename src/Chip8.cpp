@@ -105,7 +105,7 @@ void Chip8::draw(uint8_t x, uint8_t y, uint8_t height) {
   // Go through the height of the sprite, grab the byte associated, and render
   // each of those pixels coresponding to the bits of that byte
   for (size_t i = 0; i < height; i++) {
-    uint8_t sprite_byte = this->ram[this->index_register + i];
+    uint8_t sprite_byte = this->ram[this->index_register + i]
     // Go through each bit in the sprite's byte
     if ((y + i) > SCREEN_HEIGHT) {
       break;
