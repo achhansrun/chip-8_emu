@@ -1,15 +1,14 @@
 name: Lint
 
 on: # yamllint disable-line rule:truthy
-  push: 
-    branches: [ main, develop ]
-  pull_request: 
-    branches: [ main, develop ]
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 
 permissions: {}
 
 jobs:
-
   clang-tidy:
     name: Run clang-tidy
     runs-on: ubuntu-latest
@@ -20,8 +19,8 @@ jobs:
 
       - name: Git Submodule Update
         run: |
-            git pull --recurse-submodules
-            git submodule update --init --recursive
+          git pull --recurse-submodules
+          git submodule update --init --recursive
       - name: Setup to run clang-tidy
         run: |
           sudo apt install -y clang-tidy
@@ -30,7 +29,6 @@ jobs:
       - name: Running clang-tidy
         run: |
           clang-tidy -p build/ src/* include/*
-
 
   super-linter:
     name: Run Super-Linter
