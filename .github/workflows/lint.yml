@@ -25,6 +25,8 @@ jobs:
           sudo apt install -y clang-tidy
           sudo apt install -y cmake
           cmake -DCMAKE_BUILD_TYPE=Debug . -B build/
+      - name: Running clang-tidy
+        run: |
           clang-tidy -p build/ src/* include/*
 
 
