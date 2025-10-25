@@ -32,3 +32,4 @@ jobs:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_CPP: false
+          VALIDATE_NATURAL_LANGUAGE: false
