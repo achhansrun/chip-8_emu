@@ -1,5 +1,6 @@
+//ignore-include
 #include "Chip8.hpp"
-#include "window.hpp"
+#include "Window.hpp"
 #include <iostream>
 #include <string>
 

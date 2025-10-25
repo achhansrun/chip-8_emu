@@ -1,4 +1,4 @@
-#include "window.hpp"
+#include "Window.hpp"
 #include <iostream>
 
 Window::Window(size_t window_width, size_t window_height, size_t texture_width,

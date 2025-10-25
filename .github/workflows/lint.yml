@@ -20,19 +20,12 @@ jobs:
         run: |
             git pull --recurse-submodules
             git submodule update --init --recursive
-      - name: Run clang-tidy
-        uses: HorstBaerbel/action-clang-tidy@1.2
-        # These are optional (defaults displayed)
-        with:
-          scandir: '.'
-          builddir: 'build/'
-          excludedirs: 'vendored/'
-          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
-          cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-      - name: Check compile commands
+      - name: Setup to run clang-tidy
         run: |
-          echo "=== First few entries of compile_commands.json ==="
-          head -n 20 build/compile_commands.json
+          sudo apt install -y clang-tidy
+          sudo apt install -y cmake
+          cmake -DCMAKE_BUILD_TYPE=Debug . -B build/
+          clang-tidy -p build/ src/* include/*
 
 
   super-linter:

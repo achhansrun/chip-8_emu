@@ -10,9 +10,11 @@ First clone the repo:
 Next, fetch submodules:  
 `git submodule update --init --recursive`
 
-### How to do debug build
+### How to build
 
-First this command to configure build:  
-`cmake -S . -B build/Debug`  
-Next this command to finally build:  
-`cmake --build build/Debug`
+First this command to configure debug build:  
+`cmake -DCMAKE_BUILD_TYPE=Debug . -B build/`  
+or this command to configure release build:
+`cmake -DCMAKE_BUILD_TYPE=Release . -B build/`
+Next this command to finally build all types:  
+`cmake --build build`

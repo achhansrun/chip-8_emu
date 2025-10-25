@@ -14,8 +14,11 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 add_subdirectory(./vendored/SDL EXCLUDE_FROM_ALL)
 
 # Project source directory
-add_subdirectory(src)
-
+# Glob all source from src to feed into add_executable
+file(GLOB chip8_SRC CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+# Create your executable target as usual
+add_executable(chip8 WIN32 ${chip8_SRC})
+target_include_directories(chip8 PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 # Link to the actual SDL3 library.
 target_link_libraries(chip8 PRIVATE SDL3::SDL3)
