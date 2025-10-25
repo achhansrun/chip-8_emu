@@ -1,6 +1,6 @@
 # Chip 8 Emulator
 
-[![Lint](https://github.com/achhansrun/chip-8_emu/actions/workflows/lint.yml/badge.svg)](https://github.com/achhansrun/chip-8_emu/actions/workflows/lint.yml)
+[![Lint](https://github.com/achhansrun/chip-8_emu/actions/workflows/lint.yml/badge.svg)](https://github.com/achhansrun/chip-8_emu/actions/workflows/lint.yml)  
 Creating a chip-8 emulator in c++
 
 ## How to start contributing
