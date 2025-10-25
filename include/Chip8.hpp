@@ -19,7 +19,7 @@ private:
   static const size_t STACK_SIZE = 16;
   static const size_t RAM_SIZE = 4096;
   static const size_t NUM_VREGS = 16;
-  static const size_t FONT_LOCATION = 0x50
+  static const size_t FONT_LOCATION = 0x50;
   uint16_t program_counter;
   uint16_t index_register;
   uint8_t timer;
