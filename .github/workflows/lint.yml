@@ -30,6 +30,7 @@ jobs:
           excludedirs: 'vendored/'
           extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
           cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON'
+          fail-on-error: true
 
   super-linter:
     name: Run Super-Linter
