@@ -14,7 +14,7 @@ Next, fetch submodules:
 
 First this command to configure debug build:  
 `cmake -DCMAKE_BUILD_TYPE=Debug . -B build/`  
-or this command to configure release build:
+or this command to configure release build:  
 `cmake -DCMAKE_BUILD_TYPE=Release . -B build/`
 Next this command to finally build all types:  
 `cmake --build build`
