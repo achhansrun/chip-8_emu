@@ -20,7 +20,6 @@ jobs:
         run: |
             git pull --recurse-submodules
             git submodule update --init --recursive
-
       - name: Run clang-tidy
         uses: HorstBaerbel/action-clang-tidy@1.2
         # These are optional (defaults displayed)
@@ -29,8 +28,7 @@ jobs:
           builddir: 'build/'
           excludedirs: 'vendored/'
           extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
-          cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON'
-          fail-on-error: true
+          cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 
   super-linter:
     name: Run Super-Linter
