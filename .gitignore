@@ -1,5 +1,8 @@
 # Build directory
 build/
+Debug/
+.vscode/
+.venv/
 
 # Prerequisites
 *.d
