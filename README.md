@@ -1,5 +1,4 @@
-
-# Chip 8 Emulator  
+# Chip 8 Emulator
 
 [![Super-Lint](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml/badge.svg)](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml)
 Creating a chip-8 emulator in c++
@@ -16,4 +15,4 @@ Next, fetch submodules:
 First this command to configure build:  
 `cmake -S . -B build/Debug`  
 Next this command to finally build:  
-`cmake --build build/Debug`  
+`cmake --build build/Debug`
