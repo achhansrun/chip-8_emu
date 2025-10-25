@@ -19,7 +19,7 @@ jobs:
         git pull --recurse-submodules
         git submodule update --init --recursive
     - name: Run clang-tidy
-      uses: HorstBaerbel/action-clang-tidy@1.2
+      uses: HorstBaerbel/action-clang-tidy@5f6a5d643cb8ab44f57c8d16a78f53b8ba75e13a
       # These are optional (defaults displayed)
       with:
         scandir: '.'
