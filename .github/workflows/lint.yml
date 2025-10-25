@@ -29,6 +29,11 @@ jobs:
           excludedirs: 'vendored/'
           extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
           cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+      - name: Check compile commands
+        run: |
+          echo "=== First few entries of compile_commands.json ==="
+          head -n 20 build/compile_commands.json
+
 
   super-linter:
     name: Run Super-Linter
