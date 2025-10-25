@@ -1,7 +1,7 @@
 # Chip 8 Emulator
 
 [![Super-Lint](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml/badge.svg)](https://github.com/achhansrun/chip-8_emu/actions/workflows/super-lint.yml)  
-Creating a chip-8 emulator in c++  
+Creating a chip-8 emulator in c++
 
 ## How to start contributing
 
