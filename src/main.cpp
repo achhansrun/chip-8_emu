@@ -1,4 +1,3 @@
-//ignore-include
 #include "Chip8.hpp"
 #include "Window.hpp"
 #include <iostream>
