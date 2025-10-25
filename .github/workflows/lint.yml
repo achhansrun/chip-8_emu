@@ -1,4 +1,4 @@
-name: Super-Linter
+name: Lint
 
 on: # yamllint disable-line rule:truthy
   push: null
@@ -7,8 +7,30 @@ on: # yamllint disable-line rule:truthy
 permissions: {}
 
 jobs:
-  build:
-    name: Super-Linter
+
+  clang-tidy:
+    name: Run clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Git Submodule Update
+        run: |
+            git pull --recurse-submodules
+            git submodule update --init --recursive
+
+      - name: Run clang-tidy
+        uses: HorstBaerbel/action-clang-tidy@5f6a5d643cb8ab44f57c8d16a78f53b8ba75e13a
+        # These are optional (defaults displayed)
+        with:
+          scandir: '.'
+          builddir: 'build/'
+          excludedirs: 'vendored/'
+          extensions: 'c,h,C,H,cpp,hpp,cc,hh,c++,h++,cxx,hxx'
+          cmakeoptions: '-DSDL_UNIX_CONSOLE_BUILD=ON'
+
+  super-linter:
+    name: Run Super-Linter
     runs-on: ubuntu-latest
 
     permissions:
