@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(chip8)
 
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
+set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG -pthread")
 
 # set the output directory for built objects.
 # This makes sure that the dynamic library goes into the build directory automatically.
