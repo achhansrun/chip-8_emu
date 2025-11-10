@@ -1,7 +1,9 @@
 #include "Chip8.hpp"
+#include "Timer.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+
 
 uint8_t fontset[] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
@@ -22,7 +24,7 @@ uint8_t fontset[] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-Chip8::Chip8() {
+Chip8::Chip8(const Window &window): window(window) {
   // Set program counter to 0x200 for initialization
   this->program_counter = 0x200;
   // Initialize registers
@@ -43,6 +45,8 @@ Chip8::Chip8() {
     ram[0x50 + i] = fontset[i];
   }
   // Reset timers
+  this->timer = Timer(0);
+  this->sound_timer = SoundTimer(0);
 }
 
 bool Chip8::getDrawFlag() { return this->drawFlag; }
@@ -83,8 +87,8 @@ void Chip8::loadProgram(const std::string &program) {
 void Chip8::fetchInstruction() {
   this->current_instruction = (this->ram[this->program_counter] & 0xFF) << 8 |
                               (this->ram[this->program_counter + 1] & 0xff);
-  std::cout << "Fetched instruction: " << std::hex << this->current_instruction
-            << std::endl;
+  // std::cout << "Fetched instruction: " << std::hex << this->current_instruction
+  //           << std::endl;
   this->program_counter += 2;
 }
 
@@ -211,20 +215,17 @@ void Chip8::decodeInstruction() {
     case 0x07:
       // TODO:
       // Vx = get_delay()
-      std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex
-                << this->current_instruction << std::endl;
+      v_registers[nibble_two] = timer.get_counter_value();
       break;
     case 0x0A:
       // TODO:
       // Vx = get_key()
-      std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex
-                << this->current_instruction << std::endl;
+      v_registers[nibble_two] = get_key();
       break;
     case 0x15:
       // TODO:
       // delay_timer(Vx)
-      std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex
-                << this->current_instruction << std::endl;
+      timer.set_timer(nibble_two);
       break;
     case 0x18:
       // TODO:
@@ -267,14 +268,24 @@ void Chip8::decodeInstruction() {
     break;
   case 0xe:
     switch (NN) {
-    case 0x69:
+    case 0xa1:
+      if (window.get_curr_key_pressed() == v_registers[nibble_two])
+      {
+        jump(program_counter+2);
+      }
+      break;
+    case 0x9E:
+      if (window.get_curr_key_pressed() != v_registers[nibble_two])
+      {
+        jump(program_counter+2);
+      }
+      break;
+    default:
       std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex
                 << this->current_instruction << std::endl;
       break;
-
-    default:
-      break;
     }
+    break;
   default:
     std::cout << "ERROR INSTRUCTION NOT IMPLEMENTED: " << std::hex
               << this->current_instruction << std::endl;
@@ -288,5 +299,27 @@ void Chip8::emulateCycle() {
 }
 
 void Chip8::setDrawFlag(bool flag) { this->drawFlag = flag; }
+
+uint8_t Chip8::get_key() {
+  uint8_t key = 0;
+  bool pressed = false;
+  // Polling to see if we have pressed a key, and if we have, return that key
+  while (!pressed)
+  {
+    // checks for if the given key has been pressed
+    pressed = window.check_for_key_press(key);
+    // check the next key
+    key++;
+    if (key > Chip8::NUM_KEYS)
+    {
+      key = 0;
+    }
+  }
+  return key;
+}
+
+uint8_t Chip8::key(){
+  return window.get_curr_key_pressed();
+}
 
 Chip8::~Chip8() {}
